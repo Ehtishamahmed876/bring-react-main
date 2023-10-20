@@ -53,16 +53,16 @@ const clients = [
   // Add more client data as needed
 ];
 
-const ClientReview = () => {
-  const [selectedClient, setSelectedClient] = useState(clients[0]);
+const ClientReview = ({data}) => {
+  const [selectedClient, setSelectedClient] = useState(data[0]);
 
   return (
     <div className="flex flex-col-reverse lg:flex-row justify-center items-center p-4 mt-5">
       <div className="md:w-[65%] ">
           <div className='flex flex-col justify-center items-center gap-5'>
-          {clients.map((client, index) => (
+          {data.map((client) => (
               <div 
-              key={index}
+              key={client.id}
               className='flex flex-col lg:flex-row justify-around '
                >
                 <div  onClick={() => setSelectedClient(client)} className='cursor-pointer lg:w-40'>
@@ -70,10 +70,10 @@ const ClientReview = () => {
                        <p className='text-sm text-gray-500'>{client.date}</p>
                 </div>
                 <div className='flex justify-start items-start w-40 '>
-                    <p className='font-[600]  text-gray-500'>{client.comwork}</p>
+                    <p className='font-[600]  text-gray-500'>{client.comfield}</p>
                 </div>
                 <div className='gap-2 flex justify-start items-start w-40'>
-                <StarRating stars={client.stars} /> {/* Use the StarRating component */}
+                <StarRating stars={client.rating} /> {/* Use the StarRating component */}
                   {client.stars}
                 </div>
             </div>
@@ -89,18 +89,18 @@ const ClientReview = () => {
         style={{  backgroundImage: `url(/images/client-bg.png)` } }
         >
         <p className='hidden 2xl:block   lg:text-[8rem]  leading-none text-gray-300'>“</p>
-        <p className="mt-4 text-white lg:text-lg">{selectedClient.message}</p>
+        <p className="mt-4 text-white lg:text-lg">{selectedClient.para}</p>
 
         </div>
         <div className="mt-4 flex items-center gap-5">
           <img
-            src={selectedClient.image}
+            src={"/images/client-image.jpg"}
             alt={selectedClient.name}
             className="lg:w-40 lg:h-40 w-16 h-16 object-cover rounded-full"
           />
           <div className='flex flex-col gap-5'>
           <p className="lg:text-xl text-black font-[600]">{selectedClient.name}</p>
-          <p>{selectedClient.position}</p>
+          <p>{selectedClient.designation}</p>
           </div>
           
 

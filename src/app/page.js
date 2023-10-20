@@ -1,10 +1,56 @@
+"use client"
+
 import ClientReview from '@/components/ClientReview'
 import Navbar from '@/components/Navbar'
 import PriceSection from '@/components/PriceSection'
 import ServiceCard from '@/components/ServiceCard'
+import getDoument from '@/firebase/firestore/getData'
+import getSubcollectionData from '@/firebase/firestore/getReview'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
+
+  const [heading, setHeading] = useState("")
+  const [para, setPara] = useState('')
+  const [appstore, setAppstore] = useState('')
+  const [playstore, setPlaystore] = useState('')
+
+  const fetchdata = async () => {
+  
+      try {
+        const data = await getDoument('website_setting',"header");
+        console.log(data)
+        setHeading(data.result._document.data.value.mapValue.fields.heading.stringValue);
+        setPara(data.result._document.data.value.mapValue.fields.para.stringValue);
+        setAppstore(data.result._document.data.value.mapValue.fields.appstore.stringValue);
+        setPlaystore(data.result._document.data.value.mapValue.fields.playstore.stringValue);
+
+
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+  
+  };
+
+  const [data, setData] = useState([]);
+
+
+  useEffect(() => {
+    const fetchSubcollectionData = async () => {
+      const subcollectionName = 'reviewsdetails'; // Replace with your subcollection name
+      const docId = 'reviews'; // Replace with the ID of the parent document
+      const collectionName = 'website_setting'; // Replace with the name of the parent collection
+
+      const subcollectionData = await getSubcollectionData(collectionName, docId, subcollectionName);
+      setData(subcollectionData);
+  };
+
+  fetchSubcollectionData();
+      fetchdata();
+  }, []);
   return (
     <>
       <div className=' bg-white z-10 font-serif overflow-hidden'>
@@ -28,21 +74,27 @@ export default function Home() {
               className="hidden lg:block w-[100%]  relative bg-opacity-30    "
             />
             <div className=' relative mt-20 md:mt-28 lg:mt-0  z-30 lg:bottom-[35rem] 2xl:bottom-[45rem] lg:w-[80%] p-5 md:px-20 lg:pl-40 '>
-              <h1 className='text-black text-3xl leading-8 md:leading-none md:text-[55px] font-[600] '>100% KiWI OWNED DELIVERY APP</h1>
-              <p className='mt-8 text-lg'>Set within the foundations of an instant delivery platform, Bring powers deliveries whether it is forgotten keys to large customized ecommerce solutions.</p>
+              <h1 className='text-black text-3xl leading-8 md:leading-none md:text-[55px] font-[600] '>{heading}</h1>
+              <p className='mt-8 text-lg'>{para}</p>
+               
               <div className='flex gap-4 mt-10'>
+             
+              <Link href={appstore} target="_blank" >
                 <div className='bg-[#eb0c8e] flex justify-center items-center gap-1 w-40 p-3 rounded-lg'>
                   <button className='text-[13px] text-white font-[500]'>App Store </button>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 text-white h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                   </svg>
                 </div>
+                </Link>
+                <Link href={playstore} target="_blank"  >
                 <div className='bg-[#eb0c8e] flex justify-center items-center gap-1 w-40 p-3 rounded-lg'>
                   <button className='text-[13px] text-white font-[500]'>Play Store </button>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 text-white h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                   </svg>
                 </div>
+                </Link>
               </div>
             </div>
           </div>
@@ -151,7 +203,7 @@ export default function Home() {
           </div>
 
           <div className=' xl:px-20'>
-            <ClientReview />
+            <ClientReview data={data} />
           </div>
         </div>
 
