@@ -16,6 +16,7 @@ const getSubcollectionData = async (collectionName, docId, subcollectionName) =>
         console.log("doc is",doc)
 
     });
+    console.log("fire",data)
     return data;
   } catch (error) {
     console.error('Error fetching data from subcollection:', error);

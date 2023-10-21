@@ -20,12 +20,12 @@ export default function Home() {
   const fetchdata = async () => {
   
       try {
-        const data = await getDoument('website_setting',"header");
-        console.log(data)
-        setHeading(data.result._document.data.value.mapValue.fields.heading.stringValue);
-        setPara(data.result._document.data.value.mapValue.fields.para.stringValue);
-        setAppstore(data.result._document.data.value.mapValue.fields.appstore.stringValue);
-        setPlaystore(data.result._document.data.value.mapValue.fields.playstore.stringValue);
+        const data2 = await getDoument('website_setting',"header");
+        console.log(data2)
+        setHeading(data2.result._document.data.value.mapValue.fields.heading.stringValue);
+        setPara(data2.result._document.data.value.mapValue.fields.para.stringValue);
+        setAppstore(data2.result._document.data.value.mapValue.fields.appstore.stringValue);
+        setPlaystore(data2.result._document.data.value.mapValue.fields.playstore.stringValue);
 
 
         
@@ -35,20 +35,10 @@ export default function Home() {
   
   };
 
-  const [data, setData] = useState([]);
-
 
   useEffect(() => {
-    const fetchSubcollectionData = async () => {
-      const subcollectionName = 'reviewsdetails'; // Replace with your subcollection name
-      const docId = 'reviews'; // Replace with the ID of the parent document
-      const collectionName = 'website_setting'; // Replace with the name of the parent collection
 
-      const subcollectionData = await getSubcollectionData(collectionName, docId, subcollectionName);
-      setData(subcollectionData);
-  };
 
-  fetchSubcollectionData();
       fetchdata();
   }, []);
   return (
@@ -203,7 +193,7 @@ export default function Home() {
           </div>
 
           <div className=' xl:px-20'>
-            <ClientReview data={data} />
+            <ClientReview  />
           </div>
         </div>
 

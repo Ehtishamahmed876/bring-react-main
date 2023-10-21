@@ -1,61 +1,37 @@
 "use client"
 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import StarRating from './StarRating';
+import getSubcollectionData from '@/firebase/firestore/getReview';
 
-const clients = [
-  {
-    name: 'David Martino Co',
-    date: '30 November 2021',
-    comwork: 'Financial Apps',
-    position: 'CEO of David Company',
-    stars: 4.8,
-    message: '“Lorem ipsum dolor sit amet, consectetur adpiscing elit, sed do eismod tempor idunte ut labore et dolore magna aliqua darwin kengan lorem ipsum dolor sit amet, consectetur picing elit massive big blasta.”    ',
-    image: '/images/client-image.jpg',
-  },
-  {
-    name: 'Jake Harris Nyo',
-    date: '29 November 2021',
-    comwork: 'Digital Business',
-    position: 'CTO of Digital Company',
-    stars: 4.5,
-    message: '“Nyo,Lorem ipsum dolor sit amet, consectetur adpiscing elit, sed do eismod tempor idunte ut labore et dolore magna aliqua darwin kengan lorem ipsum dolor sit amet, consectetur picing elit massive big blasta.”    ',
-    image: '/images/client-image.jpg',
-  },
-  {
-    name: 'May Catherina',
-    date: '27 November 2021',
-    comwork: 'Business & Economics',
-    position: 'CEO of David Company',
-    stars: 4.7,
-    message: '“May,Lorem ipsum dolor sit amet, consectetur adpiscing elit, sed do eismod tempor idunte ut labore et dolore magna aliqua darwin kengan lorem ipsum dolor sit amet, consectetur picing elit massive big blasta.”    ',
-    image: '/images/client-image.jpg',
-  },
-  {
-    name: 'Random User',
-    date: '24 November 2021    ',
-    comwork: 'New App Ecosystem',
-    position: ' Manager, Digital Company',
-    stars: 3.9,
-    message: '“May,Lorem ipsum dolor sit amet, consectetur adpiscing elit, sed do eismod tempor idunte ut labore et dolore magna aliqua darwin kengan lorem ipsum dolor sit amet, consectetur picing elit massive big blasta.”    ',
-    image: '/images/client-image.jpg',
-  },
-  {
-    name: 'Mark Amber Do',
-    date: '21 November 2021',
-    comwork: 'Web Development',
-    position: 'CTO, Amber Do Company',
-    stars: 4.3,
-    message: '“Lorem ipsum dolor sit amet, consectetur adpiscing elit, sed do eismod tempor idunte ut labore et dolore magna aliqua darwin kengan lorem ipsum dolor sit amet, consectetur picing elit massive big blasta.”    ',
-    image: '/images/client-image.jpg',
-  },
-  // Add more client data as needed
-];
 
-const ClientReview = ({data}) => {
+
+const ClientReview = () => {
+  const [data, setData] = useState([]);
   const [selectedClient, setSelectedClient] = useState(data[0]);
 
+
+   useEffect(() => {
+     const fetchSubcollectionData = async () => {
+       const subcollectionName = 'reviewsdetails'; // Replace with your subcollection name
+       const docId = 'reviews'; // Replace with the ID of the parent document
+       const collectionName = 'website_setting'; // Replace with the name of the parent collection
+ 
+       const subcollectionData = await getSubcollectionData(collectionName, docId, subcollectionName);
+       console.log("sub",subcollectionData)
+       setData(subcollectionData);
+   };
+ 
+   fetchSubcollectionData();
+ 
+   }, []);
+   useEffect(() => {
+    if (data.length > 0) {
+      setSelectedClient(data[0]);
+    }
+  }, [data]);
+  // console.log("para",data[0])
   return (
     <div className="flex flex-col-reverse lg:flex-row justify-center items-center p-4 mt-5">
       <div className="md:w-[65%] ">
@@ -89,18 +65,18 @@ const ClientReview = ({data}) => {
         style={{  backgroundImage: `url(/images/client-bg.png)` } }
         >
         <p className='hidden 2xl:block   lg:text-[8rem]  leading-none text-gray-300'>“</p>
-        <p className="mt-4 text-white lg:text-lg">{selectedClient.para}</p>
+        <p className="mt-4 text-white lg:text-lg">{selectedClient?.para}</p>
 
         </div>
         <div className="mt-4 flex items-center gap-5">
           <img
             src={"/images/client-image.jpg"}
-            alt={selectedClient.name}
+            alt={selectedClient?.name}
             className="lg:w-40 lg:h-40 w-16 h-16 object-cover rounded-full"
           />
           <div className='flex flex-col gap-5'>
-          <p className="lg:text-xl text-black font-[600]">{selectedClient.name}</p>
-          <p>{selectedClient.designation}</p>
+          <p className="lg:text-xl text-black font-[600]">{selectedClient?.name}</p>
+          <p>{selectedClient?.designation}</p>
           </div>
           
 
