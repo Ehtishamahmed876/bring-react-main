@@ -58,7 +58,7 @@ const Navbar = () => {
             <Link href={"#price"}  legacyBehavior >
 
               <a href="#" className={`text-black font-[400] text-[16px]   `}>
-                Pricing
+                Screenshot
               </a>
               </Link>
             </li>
@@ -147,7 +147,7 @@ const Navbar = () => {
             <Link href={"#price"}  legacyBehavior >
 
               <a href="#" className={`text-white font-[400] text-[16px]   `}>
-                Pricing
+                Screenshot
               </a>
               </Link>
             </li>

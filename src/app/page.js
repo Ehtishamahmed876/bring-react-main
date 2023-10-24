@@ -2,42 +2,96 @@
 
 import ClientReview from '@/components/ClientReview'
 import Navbar from '@/components/Navbar'
-import PriceSection from '@/components/PriceSection'
+
 import ServiceCard from '@/components/ServiceCard'
+import Slider from '@/components/Slider'
 import getDoument from '@/firebase/firestore/getData'
 import getSubcollectionData from '@/firebase/firestore/getReview'
+import { findAll } from '@/firebase/firestore/getServices'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
+  
+  const [data, setData] = useState([]);
 
+ 
+  // Headers States
   const [heading, setHeading] = useState("")
   const [para, setPara] = useState('')
   const [appstore, setAppstore] = useState('')
   const [playstore, setPlaystore] = useState('')
+  const [headimgurl, setHeadimgurl] = useState('')
 
+
+
+  // Featues States 
+  const [featureheading, setFeatureheading] = useState("")
+  const [featurepara, setFeaturepara] = useState("")
+  const [featureimgurl, setFeatureimgurl] = useState('')
+
+
+  // Screenshot States
+  const [screnshotheading, setScreenshotheading] = useState("")
+  const [screenshotpara, setScreenshotpara] = useState("")
+  
+
+  // Footer States 
+  const [address, setAddress] = useState("")
+  const [phone, setPhone] = useState("")
+  const [email, setEmail] = useState("")
+  const [about, setAbout] = useState("")
+  
   const fetchdata = async () => {
   
       try {
         const data2 = await getDoument('website_setting',"header");
-        console.log(data2)
+   
         setHeading(data2.result._document.data.value.mapValue.fields.heading.stringValue);
         setPara(data2.result._document.data.value.mapValue.fields.para.stringValue);
         setAppstore(data2.result._document.data.value.mapValue.fields.appstore.stringValue);
-        setPlaystore(data2.result._document.data.value.mapValue.fields.playstore.stringValue);
+        setHeadimgurl(data2.result._document.data.value.mapValue.fields.imageUrl.stringValue);
 
 
         
+        const data3 = await getDoument('website_setting',"features");
+        setFeatureheading(data3.result._document.data.value.mapValue.fields.heading.stringValue);
+        setFeaturepara(data3.result._document.data.value.mapValue.fields.para.stringValue);
+        setFeatureimgurl(data3.result._document.data.value.mapValue.fields.imageUrl.stringValue);
+
+
+        const data4 = await getDoument('website_setting',"app-screenshot");
+        setScreenshotheading(data4.result._document.data.value.mapValue.fields.heading.stringValue);
+        setScreenshotpara(data4.result._document.data.value.mapValue.fields.para.stringValue);
+       
+
+        const data5 = await getDoument('website_setting',"footer");
+        setAddress(data5.result._document.data.value.mapValue.fields.address.stringValue);
+        setPhone(data5.result._document.data.value.mapValue.fields.phone.stringValue);
+        setEmail(data5.result._document.data.value.mapValue.fields.email.stringValue);
+        setAbout(data5.result._document.data.value.mapValue.fields.about.stringValue);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
   
   };
+  const fetchSubcollectionData = async () => {
+    const subcollectionName = 'featuredetails'; // Replace with your subcollection name
+    const docId = 'features'; // Replace with the ID of the parent document
+    const collectionName = 'website_setting'; // Replace with the name of the parent collection
 
+    const subcollectionData = await getSubcollectionData(collectionName, docId, subcollectionName);
+    console.log("sub2",subcollectionData)
+    setData(subcollectionData);
+};
 
   useEffect(() => {
 
+  const serdata = findAll();
+  console.log("service", serdata)
+  fetchSubcollectionData();
 
       fetchdata();
   }, []);
@@ -91,8 +145,8 @@ export default function Home() {
 
           <div className='relative mt-10 lg:top-72 lg:right-40 lg:w-[40%] '>
             <img
-              src="/images/slider-dec.png"
-              alt="Getwick Logo"
+              src={headimgurl}
+              alt="Bring Img"
               className="w-[45rem]    "
             />
           </div>
@@ -110,11 +164,12 @@ export default function Home() {
             <p className='text-lg text-center md:w-[40rem]'>If you need the greatest collection of HTML templates for your business, please visit TooCSS Blog. If you need to have a contact form PHP script, go to our contact page for more information.</p>
           </div>
 
-          <div className='mt-20 p-3 grid md:grid-cols-2 2xl:grid-cols-4 gap-5'>
-            <ServiceCard imgsrc={"/images/service-icon-01.png"} hoverimg={"/images/service-icon-hover-01.png"} heading={"App Maintenance"} des={"You are not allowed to redistribute this template ZIP file on any other website"} />
-            <ServiceCard imgsrc={"/images/service-icon-02.png"} hoverimg={"/images/service-icon-hover-02.png"} heading={"Rocket Speed of App"} des={"You are allowed to use the Chain App Dev HTML template. Feel free to modify or edit this layout."} />
-            <ServiceCard imgsrc={"/images/service-icon-03.png"} hoverimg={"/images/service-icon-hover-03.png"} heading={"Multi Workflow Idea"} des={"If this template is beneficial for your work, please support us a little via PayPal. Thank you"} />
-            <ServiceCard imgsrc={"/images/service-icon-04.png"} hoverimg={"/images/service-icon-hover-04.png"} heading={"24/7 Help & Support"} des={"Lorem ipsum dolor consectetur adipiscing elit sedder williamsburg photo booth quinoa and fashion axe."} />
+          <div className='mt-20 p-3 grid md:grid-cols-3 2xl:grid-cols-4 gap-5'>
+            <ServiceCard />
+            {/* <ServiceCard imgsrc={"/images/service-icon-01.png"} hoverimg={"/images/service-icon-hover-01.png"} heading={"App Maintenance"} des={"You are not allowed to redistribute this template ZIP file on any other website"} /> */}
+            {/* <ServiceCard imgsrc={"/images/service-icon-02.png"} hoverimg={"/images/service-icon-hover-02.png"} heading={"Rocket Speed of App"} des={"You are allowed to use the Chain App Dev HTML template. Feel free to modify or edit this layout."} /> */}
+            {/* <ServiceCard imgsrc={"/images/service-icon-03.png"} hoverimg={"/images/service-icon-hover-03.png"} heading={"Multi Workflow Idea"} des={"If this template is beneficial for your work, please support us a little via PayPal. Thank you"} /> */}
+            {/* <ServiceCard imgsrc={"/images/service-icon-04.png"} hoverimg={"/images/service-icon-hover-04.png"} heading={"24/7 Help & Support"} des={"Lorem ipsum dolor consectetur adipiscing elit sedder williamsburg photo booth quinoa and fashion axe."} /> */}
 
           </div>
         </div>
@@ -126,32 +181,22 @@ export default function Home() {
         <div id='about' className='px-4  lg:mt-40 lg:px-20'>
           <div className='flex flex-col gap-10 xl:flex-row'>
             <div className='flex flex-col py-8 gap-8 xl:w-[50%]'>
-              <h1 className='text-black text-3xl font-[700] '>About <span className='text-[#eb0c8e]'>What We DO</span>  & Who We Are</h1>
+              <h1 className='text-black text-3xl font-[700] '>{featureheading}</h1>
               <div className='flex justify-center gap-2'>
                 <div className='p-[1px] w-5 bg-blue-500'></div>
                 <div className='p-[1px] w-5 bg-blue-500'></div>
               </div>
-              <p className='text-lg text-gray-500 font-[400]'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eismod tempor incididunt ut labore et dolore magna.</p>
-              <div className='flex flex-col md:flex-row gap-8 mt-5'>
-                <div className='p-5 px-6 rounded-[3rem]  md:w-[22rem] shadow-2xl'>
-                  <h1 className='text-black font-[700]  text-2xl hover:text-[#eb0c8e]'>Maintance Problems</h1>
-                  <p className='text-gray-500 font-[400]'>Lorem Ipsum Text</p>
+              <p className='text-lg text-gray-500 font-[400]'>{featurepara}</p>
+              <div className='grid md:grid-cols-2  gap-8 mt-5'>
+          {data.map((feature) => (
+
+                <div key={feature.id} className='p-5 px-6 rounded-[3rem]  md:w-[22rem] shadow-2xl'>
+                  <h1 className='text-black font-[700]  text-2xl hover:text-[#eb0c8e]'>{feature.name}</h1>
+                  <p className='text-gray-500 font-[400]'>{feature.text}</p>
                 </div>
-                <div className='p-5 px-6 rounded-[3rem] md:w-[22rem] shadow-2xl'>
-                  <h1 className='text-black font-[700]  text-2xl hover:text-[#eb0c8e]'>24/7 Support & Help</h1>
-                  <p className='text-gray-500 font-[400]'>Lorem Ipsum Text</p>
-                </div>
+          ))}
               </div>
-              <div className='flex flex-col md:flex-row gap-8'>
-                <div className='p-5 px-6 rounded-[3rem] md:w-[22rem] shadow-2xl'>
-                  <h1 className='text-black font-[700]  text-2xl hover:text-[#eb0c8e]'>Fixing Issues About</h1>
-                  <p className='text-gray-500 font-[400]'>Lorem Ipsum Text</p>
-                </div>
-                <div className='p-5 px-6 rounded-[3rem] md:w-[22rem] shadow-2xl'>
-                  <h1 className='text-black font-[700]  text-2xl hover:text-[#eb0c8e]'>Co. Development</h1>
-                  <p className='text-gray-500 font-[400]'>Lorem Ipsum Text</p>
-                </div>
-              </div>
+          
               <p className='text-lg text-gray-500 font-[400] mt-5'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eismod tempor incididunt ut labore et dolore magna.</p>
               <div>
                 <button className='bg-blue-500 p-3 px-8 text-white rounded-xl'>Start 14-Day Free Trial</button>
@@ -169,7 +214,7 @@ export default function Home() {
               </div>
               <div>
                 <img
-                  src="/images/about-right-dec.png"
+                  src={featureimgurl}
                   alt="Getwick Logo"
                   className="   relative "
                 />
@@ -203,16 +248,16 @@ export default function Home() {
         <div className='lg:mt-40 mt-20' id='price'>
 
           <div className='flex flex-col px-4 justify-center items-center gap-8'>
-            <h1 className='text-black text-xl lg:text-4xl font-[700]'>We Have The Best Pre-Order <span className='text-[#eb0c8e]'>Prices</span>  You Can Get</h1>
+            <h1 className='text-black text-xl lg:text-4xl font-[700]'>{screnshotheading}</h1>
             <div className='flex gap-2'>
               <div className='p-[1px] w-5 bg-blue-500'></div>
               <div className='p-[1px] w-5 bg-blue-500'></div>
             </div>
-            <p className='text-gray-500 lg:w-[30rem] text-center'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eismod tempor incididunt ut labore et dolore magna.</p>
+            <p className='text-gray-500 lg:w-[30rem] text-center'>{screenshotpara}</p>
           </div>
 
           <div className='lg:px-20 px-4 lg:mt-40 mt-10'>
-            <PriceSection />
+             <Slider />
           </div>
 
 
@@ -241,9 +286,9 @@ export default function Home() {
 
               <div className='flex flex-col gap-6'>
                 <h1 className='lg:text-white text-2xl font-[600]'>Contact Us</h1>
-                <p className='lg:text-white font-[500] mt-3'>Rio de Janeiro - RJ, 22795-008, Brazil</p>
-                <p className='lg:text-white font-[500]'>010-020-0340</p>
-                <p className='lg:text-white font-[500]'>info@company.co</p>
+                <p className='lg:text-white font-[500] mt-3'>{address}</p>
+                <p className='lg:text-white font-[500]'>{phone}</p>
+                <p className='lg:text-white font-[500]'>{email}</p>
               </div>
 
               <div className='flex flex-col gap-6'>
@@ -285,13 +330,13 @@ export default function Home() {
 
               <div className='flex flex-col gap-6'>
                 <h1 className='text-white text-2xl font-[600]'>About Our Company</h1>
-                <p className='text-white w-72'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+                <p className='text-white w-72'>{about}</p>
               </div>
             </div>
 
             <div className='flex flex-col justify-center items-center text-white mt-14 gap-2'>
-              <h1>Copyright © 2022 Chain App Dev Company. All Rights Reserved.</h1>
-              <p>Design: TemplateMo</p>
+              <h1>Copyright © 2023 Bring Inc NZ. All Rights Reserved.</h1>
+             
             </div>
           </div>
         </div>

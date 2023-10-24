@@ -1,14 +1,15 @@
+"use client"
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps } from "firebase/app";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCulrqkplE-pVnSnt6h3cByMpedLB1_HLE",
-    authDomain: "bring-test.firebaseapp.com",
-    projectId: "bring-test",
-    storageBucket: "bring-test.appspot.com",
-    messagingSenderId: "321266003011",
-    appId: "1:321266003011:web:2d5ea892df81ac17a1b8f6",
-    measurementId: "G-406SQ1SV90"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

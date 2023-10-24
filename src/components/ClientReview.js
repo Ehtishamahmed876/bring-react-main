@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import StarRating from './StarRating';
 import getSubcollectionData from '@/firebase/firestore/getReview';
+import { Timestamp } from 'firebase/firestore';
 
 
 
@@ -12,6 +13,18 @@ const ClientReview = () => {
   const [selectedClient, setSelectedClient] = useState(data[0]);
 
 
+  function formatDateFromSeconds(seconds) {
+    // Create a Firestore Timestamp from seconds (convert to milliseconds)
+    const firestoreTimestamp = Timestamp.fromDate(new Date(seconds * 1000));
+
+    // Convert Firestore Timestamp to JavaScript Date
+    const jsDate = firestoreTimestamp.toDate();
+
+    // Format the JavaScript Date object as a string
+    const formattedDate = jsDate.toLocaleDateString(); // or use any other date format you prefer
+
+    return formattedDate;
+}
    useEffect(() => {
      const fetchSubcollectionData = async () => {
        const subcollectionName = 'reviewsdetails'; // Replace with your subcollection name
@@ -43,7 +56,8 @@ const ClientReview = () => {
                >
                 <div  onClick={() => setSelectedClient(client)} className='cursor-pointer lg:w-40'>
                        <h1   className={` lg:text-xl font-[600] ${client === selectedClient ? 'text-[#eb0c8e]' : 'text-black' }`}>{client.name}</h1>
-                       <p className='text-sm text-gray-500'>{client.date}</p>
+                       <p className='text-sm text-gray-500'>{formatDateFromSeconds(client.date.seconds)}</p>
+                       
                 </div>
                 <div className='flex justify-start items-start w-40 '>
                     <p className='font-[600]  text-gray-500'>{client.comfield}</p>
